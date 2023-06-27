@@ -1,0 +1,14 @@
+{
+  "text": {
+    "font-size": 20
+  },
+  "h1": {
+    "font-size": 50
+  },
+  "h3": {
+    "font-size": 30
+  },
+  "p": {
+    "font-size": 20
+  }
+}
