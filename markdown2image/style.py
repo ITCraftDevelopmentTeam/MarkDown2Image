@@ -67,12 +67,14 @@ def get_size(ast: list) -> tuple[int, int]:#, list]:
     for item in ast:
         match item["type"]:
             case "text":
-                widget_size = ImageFont.truetype(
+                widget_size = list(ImageFont.truetype(
                         item["style"].get("font-family") or os.path.join(
                             path, "font/sarasa-fixed-cl-regular.ttf"),
                         item["style"].get("font-size") or\
                                 default_style["text"].get("font-size") or 20)\
-                        .getsize(item["innerHTML"][0])
+                        .getsize(item["innerHTML"][0]))
+                widget_size[0] += (item["style"].get("margin-left") or 0) + (item["style"].get("margin-right") or 0)
+                widget_size[1] += (item["style"].get("margin-top") or 0) + (item["style"].get("margin-bottom") or 0)
             case "br":
                 size[0] = max(size[0], line_size[0])
                 size[1] += line_size[1]
@@ -105,9 +107,16 @@ def draw(ast: dict, size: tuple) -> Image:
                         "font-size"
                     ) or 20
                 )
+                # 处理外边距
+                pos[0] += item["style"].get("margin-left") or 0
+                pos[1] += item["style"].get("margin-top") or 0
+                # 绘制
                 dr.text(tuple(pos), item["innerHTML"][0],
                         font=font, fill=item["style"].get(
                             "color") or "#000")
+                # 处理外边距
+                pos[0] -= item["style"].get("margin-left") or 0
+                pos[1] -= item["style"].get("margin-top") or 0
                 pos[0] += item["size"][0]
                 line_height = max(line_height, item["size"][1])
             case "br":

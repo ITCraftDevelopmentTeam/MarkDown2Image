@@ -3,7 +3,8 @@
     "font-size": 15
   },
   "h1": {
-    "font-size": 40
+    "font-size": 40,
+    "margin-top": 10
   },
   "h2": {
     "font-size": 34
