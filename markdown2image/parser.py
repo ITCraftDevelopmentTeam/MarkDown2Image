@@ -4,13 +4,13 @@ import marko
 preserve_nodes_for_line_breaks = ["code"]
 
 def markdown2html(markdown: str) -> str:
-    print(marko.convert(markdown))
-    return f"<div>{marko.convert(markdown)}</div>".replace("\n\n", "<br />")
+    # markdown = _markdown.replace('\n\n', '\n<br />\n')
+    return f"<div>{marko.convert(markdown)}</div>"
 
 def parse_dom(nodes: list, parent_node: str | None = None) -> list:
     ast, item = [], {}
     if parent_node == "ol":
-        length = 0
+        ol_length = 0
     for node in nodes:
         item["type"] = node.nodeName
         item["parentNode"] = parent_node
@@ -19,9 +19,8 @@ def parse_dom(nodes: list, parent_node: str | None = None) -> list:
                 item[attr[0]] = attr[1]
         item["innerHTML"] = parse_dom(node.childNodes, item["type"])
         if item["type"] == "li" and parent_node == "ol":
-            length += 1
-            item["length"] = length
-
+            ol_length += 1
+            item["length"] = ol_length
         if node.nodeType == node.TEXT_NODE:
             if parent_node not in preserve_nodes_for_line_breaks:
                 item = node.data.replace("\n", "")

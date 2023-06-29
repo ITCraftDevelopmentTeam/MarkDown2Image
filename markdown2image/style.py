@@ -15,6 +15,22 @@ def parse_style(item: dict | str | None) -> dict:
     else:
         return item
 
+def init_links(_ast: list) -> list:
+    ast = _ast.copy()
+    for i in range(len(ast)):
+        item = ast[i]
+        if isinstance(item, dict):
+            if item["type"] == "a":
+                item["style"] = {"color": "#0000ff"}
+                item["innerHTML"].append({
+                    "type":      "span",
+                    "style":     {"color": "#00ff00"},
+                    "innerHTML": [" (", item["href"], ")"]
+                })
+            else:
+                item["innerHTML"] = init_links(item["innerHTML"])
+    return ast
+
 def init_style(_ast: list, inherited_style: dict = {}) -> list:
     ast = _ast.copy()
     nlpos = []
@@ -25,13 +41,13 @@ def init_style(_ast: list, inherited_style: dict = {}) -> list:
             _style.update(inherited_style.copy())
             _style.update(parse_style(item.get("style")).copy())
             item["style"] = _style.copy()
-            print(_style)
+            # print(_style)
             item["innerHTML"] = init_style(item["innerHTML"], item["style"]) 
             nlpos.append(i)
         elif isinstance(item, str):
             _style = (default_style.get("text") or {}).copy()
             _style.update(inherited_style.copy())
-            print(_style)
+            # print(_style)
             ast[i] = {
                 "type": "text",
                 "style": _style.copy(),
