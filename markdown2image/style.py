@@ -84,7 +84,7 @@ def get_size(ast: list) -> tuple[int, int]:#, list]:
                 widget_size = get_size(item["innerHTML"])
         item["size"] = widget_size
         line_size[0] += widget_size[0]
-        line_size[1] += widget_size[1]
+        line_size[1] = max(line_size[1], widget_size[1])
     size[0] = max(size[0], line_size[0])
     size[1] += line_size[1]
     return tuple(size)
@@ -120,7 +120,8 @@ def draw(ast: dict, size: tuple) -> Image:
                 pos[0] += item["size"][0]
                 line_height = max(line_height, item["size"][1])
             case "br":
-                pos = [0, pos[1] + line_height]
+                pos[0] = 0
+                pos[1] += line_height
                 line_height = 0
             case _:
                 img.paste(draw(item["innerHTML"], item["size"]), tuple(pos))
