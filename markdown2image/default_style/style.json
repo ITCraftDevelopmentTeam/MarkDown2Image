@@ -4,24 +4,49 @@
   },
   "h1": {
     "font-size": 40,
-    "margin-top": 10
+    "margin-top": 10,
+    "margin-bottom": 5,
+    "font-weight": "bold"
   },
   "h2": {
-    "font-size": 34
+    "font-size": 34,
+    "margin-top": 7,
+    "margin-bottom": 3,
+    "font-weight": "bold"
   },
   "h3": {
-    "font-size": 29
+    "font-size": 29,
+    "margin-top": 5,
+    "font-weight": "bold"
   },
   "h4": {
-    "font-size": 25
+    "font-size": 25,
+    "margin-top": 3,
+    "margin-bottom": 3,
+    "font-weight": "bold"
   },
   "h5": {
-    "font-size": 22
+    "font-size": 22,
+    "margin-top": 3,
+    "margin-bottom": 3,
+    "font-weight": "bold"
   },
   "h6": {
-    "font-size": 20
+    "font-size": 20,
+    "margin-top": 3,
+    "margin-bottom": 3,
+    "font-weight": "bold"
   },
   "p": {
-    "font-size": 15
+    "font-size": 20
+  },
+  "strong": {
+    "font-weight": "bold"
+  },
+  "html": {
+    "margin-top": 5,
+    "margin-bottom": 5,
+    "margin-left": 5,
+    "margin-right": 5
   }
 }

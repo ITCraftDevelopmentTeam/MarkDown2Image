@@ -6,6 +6,10 @@ path: str = os.path.dirname(os.path.abspath(__file__))
 default_style: dict = json.load(open(
     os.path.join(path, "default_style/style.json"), encoding="utf-8"))
 nodes_needed_nl: list = ["h1", "h2", "h3", "h4", "h5", "h6", "p"]
+css_not_passed: dict = json.load(open(
+    os.path.join(path, "css_not_passed.json"),
+    encoding="utf-8"
+))
 
 def parse_style(item: dict | str | None) -> dict:
     if not item:
@@ -34,6 +38,10 @@ def init_links(_ast: list) -> list:
 def init_style(_ast: list, inherited_style: dict = {}) -> list:
     ast = _ast.copy()
     nlpos = []
+    inherited_style = inherited_style.copy()
+    for key in list(inherited_style.keys()):
+        if key in css_not_passed:
+            inherited_style.pop(key)
     for i in range(len(ast)):
         item = ast[i]
         if isinstance(item, dict):
@@ -42,7 +50,7 @@ def init_style(_ast: list, inherited_style: dict = {}) -> list:
             _style.update(parse_style(item.get("style")).copy())
             item["style"] = _style.copy()
             # print(_style)
-            item["innerHTML"] = init_style(item["innerHTML"], item["style"]) 
+            item["innerHTML"] = init_style(item["innerHTML"], item["style"])
             nlpos.append(i)
         elif isinstance(item, str):
             _style = (default_style.get("text") or {}).copy()
@@ -73,15 +81,15 @@ def get_size(ast: list) -> tuple[int, int]:#, list]:
                         item["style"].get("font-size") or\
                                 default_style["text"].get("font-size") or 20)\
                         .getsize(item["innerHTML"][0]))
-                widget_size[0] += (item["style"].get("margin-left") or 0) + (item["style"].get("margin-right") or 0)
-                widget_size[1] += (item["style"].get("margin-top") or 0) + (item["style"].get("margin-bottom") or 0)
             case "br":
                 size[0] = max(size[0], line_size[0])
                 size[1] += line_size[1]
                 line_size = [0, 0]
                 continue
             case _:
-                widget_size = get_size(item["innerHTML"])
+                widget_size = list(get_size(item["innerHTML"]))
+                widget_size[0] += (item["style"].get("margin-left") or 0) + (item["style"].get("margin-right") or 0)
+                widget_size[1] += (item["style"].get("margin-top") or 0) + (item["style"].get("margin-bottom") or 0)
         item["size"] = widget_size
         line_size[0] += widget_size[0]
         line_size[1] = max(line_size[1], widget_size[1])
@@ -111,12 +119,14 @@ def draw(ast: dict, size: tuple) -> Image:
                 pos[0] += item["style"].get("margin-left") or 0
                 pos[1] += item["style"].get("margin-top") or 0
                 # 绘制
-                dr.text(tuple(pos), item["innerHTML"][0],
-                        font=font, fill=item["style"].get(
-                            "color") or "#000")
-                # 处理外边距
-                pos[0] -= item["style"].get("margin-left") or 0
-                pos[1] -= item["style"].get("margin-top") or 0
+                dr.text(
+                    tuple(pos),
+                    item["innerHTML"][0],
+                    font = font,
+                    fill = item["style"].get("color") or "#000",
+                    stroke_width = 1 if item["style"].get("font-weight") == "bold" else 0,
+                    stroke_fill = item["style"].get("color") or "#000"
+                )
                 pos[0] += item["size"][0]
                 line_height = max(line_height, item["size"][1])
             case "br":
@@ -124,7 +134,13 @@ def draw(ast: dict, size: tuple) -> Image:
                 pos[1] += line_height
                 line_height = 0
             case _:
+                # 处理外边距
+                pos[0] += item["style"].get("margin-left") or 0
+                pos[1] += item["style"].get("margin-top") or 0
                 img.paste(draw(item["innerHTML"], item["size"]), tuple(pos))
+                # 处理外边距
+                pos[0] -= item["style"].get("margin-left") or 0
+                pos[1] -= item["style"].get("margin-top") or 0
                 pos[0] += item["size"][0]
                 line_height = max(line_height, item["size"][1])
 

@@ -5,7 +5,7 @@ preserve_nodes_for_line_breaks = ["code"]
 
 def markdown2html(markdown: str) -> str:
     # markdown = _markdown.replace('\n\n', '\n<br />\n')
-    return f"<div>{marko.convert(markdown)}</div>"
+    return f"<html>{marko.convert(markdown)}</html>"
 
 def parse_dom(nodes: list, parent_node: str | None = None) -> list:
     ast, item = [], {}
