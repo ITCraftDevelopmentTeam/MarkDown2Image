@@ -1,6 +1,8 @@
 example.md
 test.py
 2.png
+.vscode/
+.VSCodeCounter/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
