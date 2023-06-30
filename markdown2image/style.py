@@ -49,7 +49,38 @@ def init_style(_ast: list, inherited_style: dict = {}) -> list:
             _style.update(inherited_style.copy())
             _style.update(parse_style(item.get("style")).copy())
             item["style"] = _style.copy()
-            # print(_style)
+            # 处理边距
+            if item["style"].get("margin"):
+                item["style"]["margin-top"] = item["style"].get("margin")
+                item["style"]["margin-bottom"] = item["style"].get("margin")
+                item["style"]["margin-left"] = item["style"].get("margin")
+                item["style"]["margin-right"] = item["style"].get("margin")
+                item["style"].pop("margin")
+            if item["style"].get("padding"):
+                item["style"]["padding-top"] = item["style"].get("padding")
+                item["style"]["padding-bottom"] = item["style"].get("padding")
+                item["style"]["padding-left"] = item["style"].get("padding")
+                item["style"]["padding-right"] = item["style"].get("padding")
+                item["style"].pop("padding")
+            temp2 = {
+                "margin-top": 0,
+                "margin-bottom": 0,
+                "margin-left": 0,
+                "margin-right": 0,
+                "padding-top": 0,
+                "padding-bottom": 0,
+                "padding-left": 0,
+                "padding-right": 0
+            }
+            temp2.update(item["style"])
+            temp2["margin-top"] += temp2.pop("padding-top")
+            temp2["margin-bottom"] += temp2.pop("padding-bottom")
+            temp2["margin-left"] += temp2.pop("padding-left")
+            temp2["margin-right"] += temp2.pop("padding-right")
+            for key, value in list(temp2.items()):
+                if key in item["style"].keys() or value:
+                    item["style"][key] = value
+
             item["innerHTML"] = init_style(item["innerHTML"], item["style"])
             nlpos.append(i)
         elif isinstance(item, str):
