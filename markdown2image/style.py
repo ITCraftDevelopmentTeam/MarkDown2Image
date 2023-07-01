@@ -35,6 +35,24 @@ def init_links(_ast: list) -> list:
                 item["innerHTML"] = init_links(item["innerHTML"])
     return ast
 
+def init_pre(_ast: list) -> list:
+    ast = _ast.copy()
+    code_data = []
+    for i in range(len(ast)):
+        item = ast[i]
+        if isinstance(item, dict):
+            if item["type"] == "code" and item["parentNode"] == "pre":
+                code_data.append([i, item["class"].split("-")[1]])
+            else:
+                item["innerHTML"] = init_pre(item["innerHTML"])
+    temp1 = 0
+    for pos, lang in code_data:
+        ast.insert(pos + temp1, lang)
+        ast.insert(pos + temp1 + 1, {"type": "br", "innerHTML": []})
+        temp1 += 2
+    return ast
+
+
 def init_style(_ast: list, inherited_style: dict = {}) -> list:
     ast = _ast.copy()
     nlpos = []

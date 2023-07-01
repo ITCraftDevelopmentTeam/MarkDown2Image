@@ -4,7 +4,6 @@ import marko
 preserve_nodes_for_line_breaks = ["code"]
 
 def markdown2html(markdown: str) -> str:
-    # markdown = _markdown.replace('\n\n', '\n<br />\n')
     return f"<html>{marko.convert(markdown)}</html>"
 
 def parse_dom(nodes: list, parent_node: str | None = None) -> list:
@@ -25,7 +24,15 @@ def parse_dom(nodes: list, parent_node: str | None = None) -> list:
             if parent_node not in preserve_nodes_for_line_breaks:
                 item = node.data.replace("\n", "")
             else:
-                item = node.data
+                _item = node.data.splitlines()
+                item = {
+                    "type": "span",
+                    "innerHTML": []
+                }
+                for i in _item:
+                    item["innerHTML"].append(i)
+                    item["innerHTML"].append({"type": "br", "innerHTML": []})
+                item["innerHTML"] = item["innerHTML"][:-1]
         if item:
             ast.append(item)
         item = {}
