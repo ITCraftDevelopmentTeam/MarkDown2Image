@@ -1,39 +1,39 @@
 {
   "text": {
-    "font-size": 16
+    "font-size": 32
   },
   "h1": {
-    "font-size": 32,
+    "font-size": 64,
     "margin": 16,
     "font-weight": "bold"
   },
   "h2": {
-    "font-size": 24,
+    "font-size": 48,
     "margin": 12,
     "font-weight": "bold"
   },
   "h3": {
-    "font-size": 18,
+    "font-size": 36,
     "margin": 9,
     "font-weight": "bold"
   },
   "h4": {
-    "font-size": 16,
+    "font-size": 32,
     "margin": 8,
     "font-weight": "bold"
   },
   "h5": {
-    "font-size": 14,
+    "font-size": 28,
     "margin": 7,
     "font-weight": "bold"
   },
   "h6": {
-    "font-size": 12,
+    "font-size": 24,
     "margin": 6,
     "font-weight": "bold"
   },
   "p": {
-    "font-size": 16,
+    "font-size": 32,
     "margin": 4
   },
   "strong": {
