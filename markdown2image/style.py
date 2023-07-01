@@ -5,7 +5,7 @@ import os.path
 path: str = os.path.dirname(os.path.abspath(__file__))
 default_style: dict = json.load(open(
     os.path.join(path, "default_style/style.json"), encoding="utf-8"))
-nodes_needed_nl: list = ["h1", "h2", "h3", "h4", "h5", "h6", "p", "pre", "ol", "ul", "li"]
+nodes_needed_nl: list = ["h1", "h2", "h3", "h4", "h5", "h6", "p", "pre", "ol", "ul", "li", "blockquote"]
 css_not_passed: dict = json.load(open(
     os.path.join(path, "css_not_passed.json"),
     encoding="utf-8"

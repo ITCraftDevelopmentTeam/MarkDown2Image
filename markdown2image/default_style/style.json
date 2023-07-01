@@ -59,5 +59,9 @@
   },
   "ol": {
     "margin": 10
+  },
+  "blockquote": {
+    "background-color": "#ccc",
+    "color": "#0000ff"
   }
 }
