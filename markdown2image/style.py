@@ -5,7 +5,7 @@ import os.path
 path: str = os.path.dirname(os.path.abspath(__file__))
 default_style: dict = json.load(open(
     os.path.join(path, "default_style/style.json"), encoding="utf-8"))
-nodes_needed_nl: list = ["h1", "h2", "h3", "h4", "h5", "h6", "p", "pre"]
+nodes_needed_nl: list = ["h1", "h2", "h3", "h4", "h5", "h6", "p", "pre", "ol", "ul", "li"]
 css_not_passed: dict = json.load(open(
     os.path.join(path, "css_not_passed.json"),
     encoding="utf-8"
@@ -33,6 +33,18 @@ def init_links(_ast: list) -> list:
                 })
             else:
                 item["innerHTML"] = init_links(item["innerHTML"])
+    return ast
+
+def init_lists(_ast: list) -> list:
+    ast = _ast.copy()
+    for i in range(len(ast)):
+        item = ast[i]
+        if isinstance(item, dict):
+            if item["type"] == "li" and item["parentNode"] == "ol":
+                item["innerHTML"].insert(0, f"{item['length']}. ")
+            elif item["type"] == "li" and item["parentNode"] == "ul":
+                item["innerHTML"].insert(0, "· ")
+            item["innerHTML"] = init_lists(item["innerHTML"])
     return ast
 
 def init_pre(_ast: list) -> list:

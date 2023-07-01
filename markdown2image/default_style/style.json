@@ -53,5 +53,11 @@
     "width": "100%",
     "background-color": "#ccc",
     "margin": 5
+  },
+  "ul": {
+    "margin": 10
+  },
+  "ol": {
+    "margin": 10
   }
 }
