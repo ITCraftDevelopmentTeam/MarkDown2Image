@@ -41,7 +41,7 @@ def parse_dom(nodes: list, parent_node: str | None = None) -> list:
 def parse_html(html: str) -> list:
     dom = xml.dom.minidom.parseString(html)
     ast = parse_dom(dom.childNodes)
-    print(ast, "\n")
+    # print(ast, "\n")
     return ast
 
 def parse(markdown: str) -> list:
