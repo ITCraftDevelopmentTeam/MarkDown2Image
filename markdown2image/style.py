@@ -5,7 +5,7 @@ import os.path
 path: str = os.path.dirname(os.path.abspath(__file__))
 default_style: dict = json.load(open(
     os.path.join(path, "default_style/style.json"), encoding="utf-8"))
-nodes_needed_nl: list = ["h1", "h2", "h3", "h4", "h5", "h6", "p"]
+nodes_needed_nl: list = ["h1", "h2", "h3", "h4", "h5", "h6", "p", "pre"]
 css_not_passed: dict = json.load(open(
     os.path.join(path, "css_not_passed.json"),
     encoding="utf-8"
@@ -80,9 +80,10 @@ def init_style(_ast: list, inherited_style: dict = {}) -> list:
             for key, value in list(temp2.items()):
                 if key in item["style"].keys() or value:
                     item["style"][key] = value
-
+            
             item["innerHTML"] = init_style(item["innerHTML"], item["style"])
-            nlpos.append(i)
+            if item["type"] in nodes_needed_nl:
+                nlpos.append(i)
         elif isinstance(item, str):
             _style = (default_style.get("text") or {}).copy()
             _style.update(inherited_style.copy())
@@ -129,12 +130,16 @@ def get_size(ast: list) -> tuple[int, int]:#, list]:
     return tuple(size)
 
         
-def draw(ast: dict, size: tuple) -> Image:
-    img = Image.new("RGB", size, (255, 255, 255)) # TODO
+def draw(ast: dict, size: tuple, background_color: tuple = (255, 255, 255, 0)) -> Image:
+    img = Image.new("RGBA", size, background_color)
     dr = ImageDraw.Draw(img)
     pos = [0, 0]
     line_height = 0
     for item in ast:
+        # 渲染背景
+        if item["style"].get("background-color"):
+            dr.rectangle((pos[0], pos[1], pos[0] + item["size"][0], pos[1] + item["size"][1]), fill=item["style"]["background-color"])
+        # 渲染内容
         match item["type"]:
             case "text":
                 font = ImageFont.truetype(item["style"].get(
@@ -168,7 +173,10 @@ def draw(ast: dict, size: tuple) -> Image:
                 # 处理外边距
                 pos[0] += item["style"].get("margin-left") or 0
                 pos[1] += item["style"].get("margin-top") or 0
-                img.paste(draw(item["innerHTML"], item["size"]), tuple(pos))
+                img.alpha_composite(
+                    draw(item["innerHTML"], item["size"]),
+                    tuple(pos)
+                )
                 # 处理外边距
                 pos[0] -= item["style"].get("margin-left") or 0
                 pos[1] -= item["style"].get("margin-top") or 0

@@ -44,5 +44,14 @@
     "margin-bottom": 8,
     "margin-left": 8,
     "margin-right": 8
+  },
+  "code": {
+    "color": "#ff0000",
+    "background-color": "#ccc"
+  },
+  "pre": {
+    "width": "100%",
+    "background-color": "#ccc",
+    "margin": 5
   }
 }

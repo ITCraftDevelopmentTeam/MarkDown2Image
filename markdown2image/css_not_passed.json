@@ -6,5 +6,6 @@
     "margin-top",
     "margin-bottom",
     "margin-left",
-    "margin-right"
+    "margin-right",
+    "background-color"
 ]
