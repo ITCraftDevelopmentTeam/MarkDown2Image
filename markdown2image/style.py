@@ -147,7 +147,7 @@ def get_size(ast: list) -> tuple[int, int]:#, list]:
                             item["innerHTML"][0]
                         )
                     ),
-                    font_size
+                    font_size + 5
                 ]
             case "br":
                 size[0] = max(size[0], line_size[0])
